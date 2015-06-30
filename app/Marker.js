@@ -3,9 +3,7 @@ function Marker(options) {
         return new Marker();
     }
     this.appUrl = 'http://www.marker.com/'
-    this.siteURL = window.location.href;
-    this.options = options;
-    this.init();
+    this.siteURL = options.url || window.location.href;
 }
 
 Marker.prototype.init = function init() {
@@ -29,23 +27,20 @@ Marker.prototype.checkPagePosition = function checkPagePosition() {
 Marker.prototype.initListener = function initListener() {
     var el = document.getElementsByTagName('h1')[1];
     el.addEventListener('click', function() {
-        var url = this.sendPositionedURL();
+        var url = this.getPositionedURL();
         console.log(url);
     }.bind(this));
 };
 
-Marker.prototype.debounce = function debounce(func, wait, immediate) {
+Marker.prototype.debounce = function debounce(func, wait) {
     var timeout;
     return function() {
-        var context = this, args = arguments;
-        var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
+        var context = this,args = arguments;
+        function later() {
+            func.apply(context, args);
         };
-        var callNow = immediate && !timeout;
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
     }
 };
 
@@ -70,7 +65,7 @@ Marker.prototype.updateURLPosition = function updateURLPosition() {
     window.location.href = this.siteURL +'#scroll='+ pageYOffset;
 };
 
-Marker.prototype.sendPositionedURL = function sendPositionedURL() {
+Marker.prototype.getPositionedURL = function getPositionedURL() {
     var pageOffset = this.getScrollTop();
     return [
         this.appUrl,
@@ -78,5 +73,3 @@ Marker.prototype.sendPositionedURL = function sendPositionedURL() {
         '&scroll='+ pageOffset,
     ].join('');
 };
-
-window.onload = Marker;
