@@ -13,18 +13,16 @@ var helpers = require('./templateHelpers');
 
 // Scripts to inject
 
-var scriptSrc = fs.readFileSync('scripts/scroll-position.js', { encoding: 'utf8' });
-var scriptTag = '<script>' + scriptSrc + '</script>';
+var scriptTemplate = require('./scripts/scroll-position.js');
 
 // Server source
 
 app.get('/', function(req, res) {
 	var rootURL = req.query['root'];
-	var scrollPos = req.query['scroll'];
+	var positionY = req.query['scroll'];
 	var baseTag = '<base href="' + url.parse(rootURL).host + '" target="_blank">';
-
-	// TODO: remove this
-	scrollPos = 501;
+	var scriptTag = '<script>' + scriptTemplate({ positionY: positionY }) + '</script>';
+	console.log(scriptTag)
 
 	request(rootURL, function (error, response, body) {
 		var html;
@@ -40,7 +38,7 @@ app.get('/', function(req, res) {
 			new Promise(function(res, rej) { res(html) })
 				.then(helpers.addBaseToHTML.bind(null, baseTag))
 				.then(helpers.injectScript.bind(null, scriptTag))
-				.then(helpers.editAnchorTagPaths.bind(null, rootURL))
+				.then(helpers.ensureAbsolutePaths.bind(null, rootURL))
 				.then(function(html) {
 					res.send(html);
 				})

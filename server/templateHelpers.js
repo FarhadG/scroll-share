@@ -1,23 +1,14 @@
 var jsdom = require('jsdom');
 
-function injectScript (scriptTag, htmlFile) {
-	return new Promise(function(res, rej) {
-		res(
-			htmlFile.split('</body>').join(scriptTag + '</body>')
-		);
-	});
+module.exports.injectScript = function injectScript (scriptTag, htmlFile) {
+	return htmlFile.split('</body>').join(scriptTag + '</body>');
 }
 
-function addBaseToHTML (baseTag, htmlFile) {
-	console.log(baseTag)
-	return new Promise(function(res, rej) {
-		res(
-			htmlFile.split('<head>').join('<head>' + baseTag)
-		);
-	});
+module.exports.addBaseToHTML = function addBaseToHTML (baseTag, htmlFile) {
+	return htmlFile.split('<head>').join('<head>' + baseTag);
 }
 
-function editAnchorTagPaths (baseURL, htmlFile) {
+module.exports.ensureAbsolutePaths = function ensureAbsolutePaths (baseURL, htmlFile) {
 	return new Promise(function(res, rej) {
 		jsdom.env(
 			htmlFile,
@@ -26,7 +17,8 @@ function editAnchorTagPaths (baseURL, htmlFile) {
 				var href;
 
 				if (error) {
-					return console.log('ERROR parsing DOM: ', error);
+					console.log('ERROR PARSING DOM: ', error);
+					return res(htmlFile);
 				}
 				else {
 					var anchorTags = window.document.querySelectorAll('a');
@@ -36,23 +28,23 @@ function editAnchorTagPaths (baseURL, htmlFile) {
 					var inputTags = window.document.querySelectorAll('input');
 
 					for (var i = 0; i < anchorTags.length; i++) {
-						addBaseURLToElement(anchorTags[i], 'href', baseURL);
+						ensureAbsolutePath(anchorTags[i], 'href', baseURL);
 					}
 
 					for (var i = 0; i < imgTags.length; i++) {
-						addBaseURLToElement(imgTags[i], 'src', baseURL);
+						ensureAbsolutePath(imgTags[i], 'src', baseURL);
 					}
 
 					for (var i = 0; i < linkTags.length; i++) {
-						addBaseURLToElement(linkTags[i], 'href', baseURL);
+						ensureAbsolutePath(linkTags[i], 'href', baseURL);
 					}
 
 					for (var i = 0; i < scriptTags.length; i++) {
-						addBaseURLToElement(scriptTags[i], 'src', baseURL);
+						ensureAbsolutePath(scriptTags[i], 'src', baseURL);
 					}
 
 					for (var i = 0; i < inputTags.length; i++) {
-						addBaseURLToElement(inputTags[i], 'src', baseURL);
+						ensureAbsolutePath(inputTags[i], 'src', baseURL);
 					}
 
 					var html = jsdom.serializeDocument(window.document);
@@ -63,7 +55,9 @@ function editAnchorTagPaths (baseURL, htmlFile) {
 	});
 }
 
-function addBaseURLToElement (element, attribute, baseURL) {
+// helpers for helpers
+
+function ensureAbsolutePath (element, attribute, baseURL) {
 	var href = element.getAttribute(attribute);
 
 	if (href && pathIsRelative(href)) {
@@ -79,9 +73,3 @@ function addBaseURLToElement (element, attribute, baseURL) {
 function pathIsRelative(path) {
 	return !(~path.indexOf('//'));
 }
-
-module.exports = {
-	injectScript: injectScript,
-	addBaseToHTML: addBaseToHTML,
-	editAnchorTagPaths: editAnchorTagPaths
-};

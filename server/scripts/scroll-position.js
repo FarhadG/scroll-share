@@ -1,3 +1,7 @@
-setTimeout(function() {
-	document.body.scrollTop = 81;
-});
+module.exports = function(options) {
+	return '' + 
+
+	'setTimeout(function() {' + 
+		'document.body.scrollTop = ' + options.positionY + ';' + 
+	'});';
+}
