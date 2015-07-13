@@ -58,9 +58,11 @@ chrome.omnibox.onInputEntered.addListener(function(text) {
 document.addEventListener("DOMContentLoaded", function(event) {
     chrome.browserAction.onClicked.addListener(function(tab) {
 
-        chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
-          alert(response.farewell);
-        });
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
+        alert(response);
+      });
+    });
 
 
 

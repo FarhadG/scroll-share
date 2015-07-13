@@ -7,7 +7,10 @@ function getScrollTop() {
         return el.scrollTop;
     }
 };
-chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-    alert(sendResponse);
-  sendResponse({farewell:"goodbye"});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.greeting === "hello") {
+        alert('test')
+      sendResponse({farewell: "goodbye"});
+    }
 });
