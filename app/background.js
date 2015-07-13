@@ -18,30 +18,24 @@ function copyToClipboard(text) {
     document.body.removeChild(copyDiv);
 }
 
-chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
-    suggest([
-        {
-            content: text + " one",
-            description: "the first one"
-        },
-        {
-            content: text + " number two",
-            description: "the second entry"
-        }
-    ]);
-});
+function createScrollURL() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'clicked' }, function(response) {
+            renderStatus(response.url, response.url);
+        });
+    });
+}
 
 chrome.omnibox.onInputEntered.addListener(function(text) {
-    alert('You just typed "' + text + '"');
+    text = text.toLowerCase();
+    if (text === 'c' || text === 'copy') {
+        createScrollURL();
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function(event) {
-    chrome.browserAction.onClicked.addListener(function(tab) {
-        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, { action: 'clicked' }, function(response) {
-                renderStatus(response.url, response.url);
-            });
-        });
+    chrome.browserAction.onClicked.addListener(function() {
+        createScrollURL();
     });
 });
 

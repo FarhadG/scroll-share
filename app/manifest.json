@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "mark",
+    "name": "ScrollShare",
     "description": "This extension helps users share any URL (webpage) at a specific position in the document",
     "version": "0.0.1",
     "offline_enabled": true,
@@ -24,6 +24,6 @@
         "clipboardWrite"
     ],
     "omnibox": {
-        "keyword" : "mark"
+        "keyword" : "!"
     }
 }
