@@ -1,15 +1,3 @@
-function getCurrentTabUrl(cb) {
-    var queryInfo = {
-        active: true,
-        currentWindow: true
-    };
-    chrome.tabs.query(queryInfo, function(tabs) {
-        var url = tabs[0].url;
-        console.assert(typeof url == 'string', 'tab.url should be a string');
-        cb(url);
-    });
-}
-
 function renderStatus(statusText, url) {
     copyToClipboard(url);
     chrome.browserAction.setBadgeText({ text: 'done' });
