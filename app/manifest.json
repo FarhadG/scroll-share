@@ -3,6 +3,7 @@
     "name": "Marker",
     "description": "This extension helps users share URLs at a specific position in the document",
     "version": "0.0.1",
+    "offline_enabled": true,
     "browser_action": {
         "default_title": "Mark this position!",
         "default_icon": "icon.png"
@@ -10,8 +11,21 @@
     "background": {
         "page": "background.html"
     },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": ["content.js"]
+        }
+    ],
     "permissions": [
+        "tabs",
         "activeTab",
         "clipboardWrite"
-    ]
+    ],
+    "omnibox": {
+        "keyword" : "mark"
+    }
 }

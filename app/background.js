@@ -32,12 +32,43 @@ function copyToClipboard(text) {
     document.body.removeChild(copyDiv);
 }
 
+chrome.browserAction.setBadgeText({text: "Mark"});
+
+chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
+    suggest([
+      {content: text + " one", description: "the first one"},
+      {content: text + " number two", description: "the second entry"}
+    ]);
+});
+chrome.omnibox.onInputEntered.addListener(function(text) {
+    alert('You just typed "' + text + '"');
+});
+
+// chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+//     switch (request.type) {
+//         case "dom-loaded":
+//             alert('cool!');
+//         break;
+//     }
+// });
+//
+//
+
+
 document.addEventListener("DOMContentLoaded", function(event) {
     chrome.browserAction.onClicked.addListener(function(tab) {
 
-      chrome.tabs.executeScript({
-        code: 'document.body.style.backgroundColor="red"'
-      });
+        chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+          alert(response.farewell);
+        });
+
+
+
+        // chrome.tabs.create({url: chrome.extension.getURL('background.html')});
+
+          // chrome.tabs.executeScript({
+          //   code: 'document.body.style.backgroundColor="red"'
+          // });
 
 
         // getCurrentTabUrl(function(url) {
