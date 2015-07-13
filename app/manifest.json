@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "Marker",
-    "description": "This extension helps users share URLs at a specific position in the document",
+    "name": "mark",
+    "description": "This extension helps users share any URL (webpage) at a specific position in the document",
     "version": "0.0.1",
     "offline_enabled": true,
     "browser_action": {
@@ -14,10 +14,7 @@
     },
     "content_scripts": [
         {
-            "matches": [
-                "http://*/*",
-                "https://*/*"
-            ],
+            "matches": ["<all_urls>"],
             "js": ["content.js"]
         }
     ],

@@ -12,10 +12,10 @@ function getCurrentTabUrl(cb) {
 
 function renderStatus(statusText, url) {
     copyToClipboard(url);
-    chrome.browserAction.setBadgeText({ text: 'DONE' });
+    chrome.browserAction.setBadgeText({ text: 'done' });
     setTimeout(function() {
         chrome.browserAction.setBadgeText({ text: '' });
-    }, time || 1000);
+    }, 1500);
 }
 
 function copyToClipboard(text) {
