@@ -11,10 +11,11 @@ function getCurrentTabUrl(cb) {
 }
 
 function renderStatus(statusText, url) {
-    document.getElementById('status').textContent = statusText;
-    document.getElementById('url').value = url;
-    alert(statusText);
     copyToClipboard(url);
+    chrome.browserAction.setBadgeText({ text: 'DONE' });
+    setTimeout(function() {
+        chrome.browserAction.setBadgeText({ text: '' });
+    }, time || 1000);
 }
 
 function copyToClipboard(text) {
@@ -28,8 +29,6 @@ function copyToClipboard(text) {
     document.execCommand('Copy', false, null);
     document.body.removeChild(copyDiv);
 }
-
-chrome.browserAction.setBadgeText({text: "Mark"});
 
 chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
     suggest([
@@ -52,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     chrome.browserAction.onClicked.addListener(function(tab) {
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
             chrome.tabs.sendMessage(tabs[0].id, { action: 'clicked' }, function(response) {
-                renderStatus('COPIED!', response.url);
+                renderStatus(response.url, response.url);
             });
         });
     });
