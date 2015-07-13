@@ -1,9 +1,9 @@
-function Marker(options) {
+function Marker() {
     if (!(this instanceof Marker)) {
         return new Marker();
     }
     this.appUrl = 'http://www.marker.com/'
-    this.siteURL = options.url || window.location.href;
+    this.siteURL = window.location.href;
 }
 
 Marker.prototype.init = function init() {
@@ -22,14 +22,6 @@ Marker.prototype.checkPagePosition = function checkPagePosition() {
         this.siteURL = params[0];
     }
     return this;
-};
-
-Marker.prototype.initListener = function initListener() {
-    var el = document.getElementsByTagName('h1')[1];
-    el.addEventListener('click', function() {
-        var url = this.getPositionedURL();
-        console.log(url);
-    }.bind(this));
 };
 
 Marker.prototype.debounce = function debounce(func, wait) {
@@ -56,14 +48,20 @@ Marker.prototype.getScrollTop = function getScrollTop() {
 
 Marker.prototype.setScrollTop = function setScrollTop(value, time) {
     var el = document.body ? document.body : document.documentElement;
-    var position = 0;
-    var timedInterval = setInterval(function() {
-        position += (value/time);
-        el.scrollTop = position;
-        if (position >= value) {
-            clearInterval(timedInterval);
-        }
-    }, value/time);
+    if (time) {
+        var position = 0;
+        var timedInterval = setInterval(function() {
+            position += (value/time);
+            el.scrollTop = position;
+            if (position >= value) {
+                clearInterval(timedInterval);
+            }
+        }, value/time);
+    }
+    else {
+        el.scrollTop = value;
+    }
+    return this;
 };
 
 Marker.prototype.updateURLPosition = function updateURLPosition() {
