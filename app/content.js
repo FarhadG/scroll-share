@@ -1,12 +1,12 @@
-function Marker() {
-    if (!(this instanceof Marker)) {
-        return new Marker();
+function ScrollShare(options) {
+    if (!(this instanceof ScrollShare)) {
+        return new ScrollShare();
     }
-    this.appUrl = 'scrollshare.co/';
-    this.siteURL = window.location.href;
+    this.appUrl = 'scrollshare.co/'
+    this.siteURL = (options && options.url) || window.location.href;
 }
 
-Marker.prototype.getScrollTop = function getScrollTop() {
+ScrollShare.prototype.getScrollTop = function getScrollTop() {
     if (typeof pageYOffset !== 'undefined') {
         return pageYOffset;
     }
@@ -16,7 +16,7 @@ Marker.prototype.getScrollTop = function getScrollTop() {
     }
 };
 
-Marker.prototype.getPositionedURL = function getPositionedURL() {
+ScrollShare.prototype.getPositionedURL = function getPositionedURL() {
     var pageOffset = this.getScrollTop();
     return [
         this.appUrl,
@@ -25,13 +25,13 @@ Marker.prototype.getPositionedURL = function getPositionedURL() {
     ].join('');
 };
 
-var M = new Marker();
+var SS = new ScrollShare();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === 'clicked') {
         sendResponse({
-            url: M.getPositionedURL(),
-            position: M.getScrollTop()
+            url: SS.getPositionedURL(),
+            position: SS.getScrollTop()
         });
     }
 });

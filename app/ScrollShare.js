@@ -1,12 +1,12 @@
-function Marker() {
-    if (!(this instanceof Marker)) {
-        return new Marker();
+function ScrollShare(options) {
+    if (!(this instanceof ScrollShare)) {
+        return new ScrollShare();
     }
-    this.appUrl = 'http://www.marker.com/'
-    this.siteURL = window.location.href;
+    this.appUrl = 'scrollshare.co/'
+    this.siteURL = (options && options.url) || window.location.href;
 }
 
-Marker.prototype.init = function init() {
+ScrollShare.prototype.init = function init() {
     this.checkPagePosition();
     this.initListener();
     var debouncedUpdatePosition = this.debounce(this.updateURLPosition, 500);
@@ -14,7 +14,7 @@ Marker.prototype.init = function init() {
     return this;
 };
 
-Marker.prototype.checkPagePosition = function checkPagePosition() {
+ScrollShare.prototype.checkPagePosition = function checkPagePosition() {
     if (~this.siteURL.indexOf('#scroll=')) {
         var params = this.siteURL.split('#scroll=');
         var offset = params.slice(-1)[0];
@@ -24,7 +24,7 @@ Marker.prototype.checkPagePosition = function checkPagePosition() {
     return this;
 };
 
-Marker.prototype.debounce = function debounce(func, wait) {
+ScrollShare.prototype.debounce = function debounce(func, wait) {
     var timeout;
     return function() {
         var context = this,args = arguments;
@@ -36,7 +36,7 @@ Marker.prototype.debounce = function debounce(func, wait) {
     }
 };
 
-Marker.prototype.getScrollTop = function getScrollTop() {
+ScrollShare.prototype.getScrollTop = function getScrollTop() {
     if (typeof pageYOffset !== 'undefined') {
         return pageYOffset;
     }
@@ -46,7 +46,7 @@ Marker.prototype.getScrollTop = function getScrollTop() {
     }
 };
 
-Marker.prototype.setScrollTop = function setScrollTop(value, time) {
+ScrollShare.prototype.setScrollTop = function setScrollTop(value, time) {
     var el = document.body ? document.body : document.documentElement;
     if (time) {
         var position = 0;
@@ -64,12 +64,12 @@ Marker.prototype.setScrollTop = function setScrollTop(value, time) {
     return this;
 };
 
-Marker.prototype.updateURLPosition = function updateURLPosition() {
+ScrollShare.prototype.updateURLPosition = function updateURLPosition() {
     var pageOffset = this.getScrollTop();
     window.location.href = this.siteURL +'#scroll='+ pageYOffset;
 };
 
-Marker.prototype.getPositionedURL = function getPositionedURL() {
+ScrollShare.prototype.getPositionedURL = function getPositionedURL() {
     var pageOffset = this.getScrollTop();
     return [
         this.appUrl,
