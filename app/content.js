@@ -2,7 +2,7 @@ function Marker() {
     if (!(this instanceof Marker)) {
         return new Marker();
     }
-    this.appUrl = 'http://bit.ly/1Mp6KOq';
+    this.appUrl = 'scrollshare.co/';
     this.siteURL = window.location.href;
 }
 
