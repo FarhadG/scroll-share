@@ -22,7 +22,6 @@ app.get('/', function(req, res) {
 	var positionY = req.query['scroll'];
 	var baseTag = '<base href="' + url.parse(rootURL).host + '" target="_blank">';
 	var scriptTag = '<script>' + scriptTemplate({ positionY: positionY }) + '</script>';
-	console.log(scriptTag)
 
 	request(rootURL, function (error, response, body) {
 		var html;
@@ -51,7 +50,7 @@ app.get('/', function(req, res) {
 
 // List to port
 
-var server = app.listen(3000, function() {
+var server = app.listen(process.env.PORT || 3000, function() {
 	var host = server.address().address;
 	var port = server.address().port;
 
