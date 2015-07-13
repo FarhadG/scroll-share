@@ -54,10 +54,16 @@ Marker.prototype.getScrollTop = function getScrollTop() {
     }
 };
 
-Marker.prototype.setScrollTop = function setScrollTop(value) {
+Marker.prototype.setScrollTop = function setScrollTop(value, time) {
     var el = document.body ? document.body : document.documentElement;
-    el.scrollTop = value;
-    return this;
+    var position = 0;
+    var timedInterval = setInterval(function() {
+        position += (value/time);
+        el.scrollTop = position;
+        if (position >= value) {
+            clearInterval(timedInterval);
+        }
+    }, value/time);
 };
 
 Marker.prototype.updateURLPosition = function updateURLPosition() {
