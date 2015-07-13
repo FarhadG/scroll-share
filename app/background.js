@@ -54,29 +54,13 @@ chrome.omnibox.onInputEntered.addListener(function(text) {
 //
 //
 
-
 document.addEventListener("DOMContentLoaded", function(event) {
     chrome.browserAction.onClicked.addListener(function(tab) {
-
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
-        alert(response);
-      });
-    });
-
-
-
-        // chrome.tabs.create({url: chrome.extension.getURL('background.html')});
-
-          // chrome.tabs.executeScript({
-          //   code: 'document.body.style.backgroundColor="red"'
-          // });
-
-
-        // getCurrentTabUrl(function(url) {
-        // //     var marker = new Marker({ url: url });
-        // //     renderStatus('COPIED!', url);
-        // });
+        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { action: 'clicked' }, function(response) {
+                alert(response.url);
+            });
+        });
     });
 });
 
